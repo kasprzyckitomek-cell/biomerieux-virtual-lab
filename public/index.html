@@ -16,6 +16,7 @@
     <button id="btn-1h" title="Przewiń 1 godzinę">+1h</button><button id="btn-8h" title="Przewiń 8 godzin">+8h</button><button id="btn-next" title="Przewiń do zakończenia najbliższego procesu">⏭</button></div></div>
   <div class="prog"><span id="hud-level">Stażysta</span><div class="xpbar"><i id="hud-xpbar"></i></div><small id="hud-xp">0 XP</small></div>
   <span id="hud-qc" class="qc warn">QC !</span>
+  <button id="btn-plan" class="hbtn">📋 Plan pracy</button>
   <button id="btn-jobs" class="hbtn">⚙️ Procesy</button>
   <button id="btn-tray" class="hbtn">🧺 Taca <span id="tray-badge"></span></button>
   <button id="btn-help" class="hbtn">❓</button>
@@ -24,6 +25,7 @@
 <main id="stage">
   <canvas id="game"></canvas>
   <canvas id="minimap" width="150" height="96"></canvas>
+  <div id="missions" class="hidden"></div>
   <div id="jobsbox" class="hidden"><h4>Trwające procesy</h4><div id="hud-jobs"></div></div>
   <div id="hint"></div>
   <button id="btn-act">E</button>
@@ -60,6 +62,7 @@
 <script src="js/st_lab.js"></script>
 <script src="js/st_id.js"></script>
 <script src="js/st_mol.js"></script>
+<script src="js/missions.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

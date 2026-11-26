@@ -79,6 +79,25 @@ window.WORLD = (function () {
     for (const o of OBJ) { if (px > o.x * T + 2 && px < (o.x + o.w) * T - 2 && py > o.y * T + 4 && py < (o.y + o.h) * T - 2) return true; }
     return false;
   }
+  function walkTile(tx, ty) { if (solid(tx, ty)) return false; const cx = tx * T + T / 2, cy = ty * T + T / 2; return !blocked(cx, cy); }
+  function findPath(px, py, gx, gy) {
+    const sx = Math.floor(px / T), sy = Math.floor(py / T);
+    let tx = Math.floor(gx / T), ty = Math.floor(gy / T);
+    if (!walkTile(tx, ty)) { // najbliższy wolny kafelek
+      let best = null, bd = 1e9; for (let dx = -3; dx <= 3; dx++) for (let dy = -1; dy <= 3; dy++) { if (walkTile(tx + dx, ty + dy)) { const d = Math.abs(dx) + Math.abs(dy) * 1.2; if (d < bd) { bd = d; best = [tx + dx, ty + dy]; } } }
+      if (!best) return null; [tx, ty] = best;
+    }
+    const key = (x, y) => y * W + x, prev = new Map([[key(sx, sy), -1]]), q = [[sx, sy]];
+    while (q.length) {
+      const [x, y] = q.shift(); if (x === tx && y === ty) break;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const nx = x + dx, ny = y + dy, k = key(nx, ny); if (!prev.has(k) && walkTile(nx, ny)) { prev.set(k, key(x, y)); q.push([nx, ny]); } }
+    }
+    if (!prev.has(key(tx, ty))) return null;
+    const path = []; let k = key(tx, ty);
+    while (k !== -1 && k !== key(sx, sy)) { path.unshift([(k % W) * T + T / 2, Math.floor(k / W) * T + T / 2]); k = prev.get(k); }
+    return path;
+  }
+  function setTarget(x, y, obj) { const path = findPath(P.x, P.y, x, y); target = { x, y, obj, path: path || [] }; if (path && path.length) { const last = path[path.length - 1]; target.x = last[0]; target.y = last[1]; } }
   function blocked(px, py) {
     const pts = [[px - 9, py - 4], [px + 9, py - 4], [px - 9, py + 4], [px + 9, py + 4]];
     return pts.some(([x, y]) => solid(Math.floor(x / T), Math.floor(y / T)) || objHit(x, y));
@@ -140,8 +159,8 @@ window.WORLD = (function () {
     cv.addEventListener('pointerdown', e => {
       const r = cv.getBoundingClientRect(); const wx = (e.clientX - r.left) / Z + cam.x, wy = (e.clientY - r.top) / Z + cam.y;
       const o = OBJ.find(o => !o.deco && wx > o.x * T && wx < (o.x + o.w) * T && wy > (o.y + o.h - o.ah) * T && wy < (o.y + o.h) * T + 10);
-      if (o) { target = { x: (o.x + o.w / 2) * T, y: (o.y + o.h) * T + 20, obj: o }; }
-      else target = { x: wx, y: wy };
+      if (o) setTarget((o.x + o.w / 2) * T, (o.y + o.h) * T + 20, o);
+      else setTarget(wx, wy);
     });
     document.getElementById('btn-act').onclick = interact;
     requestAnimationFrame(loop);
@@ -170,8 +189,10 @@ window.WORLD = (function () {
     if (keys['arrowleft'] || keys['a']) dx -= 1; if (keys['arrowright'] || keys['d']) dx += 1;
     if (keys['arrowup'] || keys['w']) dy -= 1; if (keys['arrowdown'] || keys['s']) dy += 1;
     if (!dx && !dy && target) {
-      const tx = target.x - P.x, ty = target.y - P.y, d = Math.hypot(tx, ty);
-      if (d < 6) { if (target.obj) { const o = target.obj; target = null; near = o; interact(); } else target = null; }
+      if (target.path && target.path.length > 1) { const [wx, wy] = target.path[0]; if (Math.hypot(wx - P.x, wy - P.y) < 5) target.path.shift(); }
+      const wp = target.path && target.path.length ? target.path[0] : [target.x, target.y];
+      const tx = wp[0] - P.x, ty = wp[1] - P.y, d = Math.hypot(tx, ty);
+      if (d < 5 && (!target.path || target.path.length <= 1)) { if (target.obj) { const o = target.obj; target = null; near = o; interact(); } else target = null; }
       else { dx = tx / d; dy = ty / d; }
     }
     const sp = (keys['shift'] ? 250 : 165) * dt;
@@ -284,7 +305,7 @@ window.WORLD = (function () {
     m.fillStyle = '#0a66c2'; m.beginPath(); m.arc(P.x / T * s, P.y / T * s, 3.5, 0, 7); m.fill();
     m.strokeStyle = '#fff'; m.strokeRect(cam.x / T * s, cam.y / T * s, cv.clientWidth / Z / T * s, cv.clientHeight / Z / T * s);
   }
-  function goTo(st) { const o = OBJ.find(o => o.st === st); if (o) target = { x: (o.x + o.w / 2) * T, y: (o.y + o.h) * T + 20, obj: o }; }
+  function goTo(st) { const o = OBJ.find(o => o.st === st); if (o) setTarget((o.x + o.w / 2) * T, (o.y + o.h) * T + 20, o); }
 
   return { init, drawPerson, goTo, OBJ };
 })();

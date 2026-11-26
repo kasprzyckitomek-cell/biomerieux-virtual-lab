@@ -26,7 +26,8 @@
     (function anim() { if ($('#intro').classList.contains('hidden')) return; c.clearRect(0, 0, 120, 120); c.save(); c.scale(2, 2); WORLD.drawPerson(c, 30, 30, 'down', w += .12); c.restore(); requestAnimationFrame(anim); })();
     $('#intro-go').onclick = () => {
       C.S.player.name = $('#intro-name').value.trim() || 'Diagnosta'; const first = !C.S.tutorial; C.S.tutorial = true; C.save(); $('#intro').classList.add('hidden');
-      if (first) setTimeout(() => C.toast('👋 Zacznij od <b>Rejestracji (LIS)</b> w lewym górnym pokoju – przyjmij pierwsze zlecenie. Kontrola jakości czeka w prawym dolnym pokoju.', 'info'), 600);
+      if (first) setTimeout(() => C.toast('👋 Zacznij od <b>Rejestracji (LIS)</b> w lewym górnym pokoju – przyjmij zlecenie. Co zrobić z próbką, pokaże panel <b>📋 Plan pracy</b>.', 'info'), 600);
+      if (Object.values(C.S.cases).some(c => !c.done)) MISSIONS.show();
     };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();

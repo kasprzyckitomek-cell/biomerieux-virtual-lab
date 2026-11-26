@@ -118,7 +118,7 @@
           <div class="case-p">👤 ${h(cs.patient)} · 🏥 ${h(cs.ward)}</div>
           <div class="case-c">${h(cs.clin)}</div>
           <div class="case-g">🎯 ${h(cs.goal)}</div>
-          ${st ? (st.done ? `<div class="ok">✓ Zakończony · wynik ${st.score}%</div>` : `<div class="info">W toku od ${C.clock(st.t)} · próbki: ${st.specs.join(', ')}</div><details><summary>Podpowiedź</summary>${h(cs.tip)}</details>`) : `<button class="btn" data-accept="${cs.id}">📥 Przyjmij zlecenie</button>`}
+          ${st ? (st.done ? `<div class="ok">✓ Zakończony · wynik ${st.score}%</div>` : `<div class="info">W toku od ${C.clock(st.t)} · próbki: ${st.specs.join(', ')}</div><button class="btn sm" data-plan="${cs.id}">📋 Pokaż plan pracy</button><details><summary>Podpowiedź</summary>${h(cs.tip)}</details>`) : `<button class="btn" data-accept="${cs.id}">📥 Przyjmij zlecenie</button>`}
         </div>`;
       }).join('');
       const orgOpts = Object.entries(DB.ORG).map(([k, o]) => `<option value="${k}">${o.name}</option>`).join('');
@@ -142,6 +142,7 @@
       `, { wide: true, sub: 'Laboratoryjny System Informatyczny · przyjmowanie zleceń' });
       $$('[data-tab]').forEach(b => b.onclick = () => { this.tab = b.dataset.tab; this.render(); });
       $$('[data-accept]').forEach(b => b.onclick = () => this.accept(b.dataset.accept));
+      $$('[data-plan]').forEach(b => b.onclick = () => { $('#missions').dataset.sel = b.dataset.plan; C.closeModal(); MISSIONS.show(); });
       $$('[data-arch]').forEach(b => b.onclick = () => { C.get('specimens', b.dataset.arch).archived = true; C.save(); this.render(); C.updateTray(); });
       if (tab === 'sandbox') {
         const fillPh = () => { const o = DB.ORG[$('#sb-org').value]; $('#sb-ph').innerHTML = Object.entries(o.phenos).map(([k, p]) => `<option value="${k}">${p.name}</option>`).join(''); };
@@ -161,7 +162,7 @@
       const cs = DB.CASES.find(c => c.id === id); const ids = [];
       cs.specimens.forEach(d => { const s = C.makeSpecimen(id, d); ids.push(s.id); });
       S().cases[id] = { t: S().t, specs: ids, done: false };
-      C.logEv(`Przyjęto zlecenie ${id}: ${cs.title}`); C.toast(`📥 Przyjęto ${id} – próbki ${ids.join(', ')} na tacy`, 'ok'); C.beep(600, .08);
+      C.logEv(`Przyjęto zlecenie ${id}: ${cs.title}`); C.toast(`📥 Przyjęto ${id} – próbki ${ids.join(', ')} na tacy. Kroki znajdziesz w panelu 📋 Plan pracy.`, 'ok'); $('#missions').dataset.sel = id; MISSIONS.show(); C.beep(600, .08);
       C.save(); C.updateTray(); this.render();
     }
   };

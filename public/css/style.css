@@ -20,7 +20,7 @@ kbd{background:#fff;color:#123;border-radius:4px;padding:1px 6px;font-size:12px;
 #btn-act{position:absolute;right:20px;bottom:70px;width:64px;height:64px;border-radius:50%;border:0;background:#5d6975;color:#fff;font-size:22px;font-weight:700;opacity:.6;box-shadow:0 4px 12px rgba(0,0,0,.4)}#btn-act.on{background:var(--blue);opacity:1;animation:pulse 1.2s infinite}
 #quick{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
 #quick button{background:rgba(255,255,255,.92);border:0;border-radius:16px;padding:6px 10px;font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.25)}#quick button:hover{background:var(--blue);color:#fff}
-#jobsbox{position:absolute;left:10px;top:10px;width:300px;background:rgba(255,255,255,.96);border-radius:var(--r);padding:8px 12px;box-shadow:0 4px 16px rgba(0,0,0,.3);font-size:12px}#jobsbox h4{margin:2px 0 6px}
+#jobsbox{position:absolute;right:10px;top:116px;width:300px;background:rgba(255,255,255,.96);border-radius:var(--r);padding:8px 12px;box-shadow:0 4px 16px rgba(0,0,0,.3);font-size:12px}#jobsbox h4{margin:2px 0 6px}
 .hjob{position:relative;background:#eef3f8;border-radius:6px;padding:5px 8px;margin:4px 0;overflow:hidden;display:flex;justify-content:space-between;gap:8px;font-size:12px}.hjob i{position:absolute;left:0;bottom:0;height:3px;background:var(--blue)}.hjob em{color:var(--mut);font-style:normal;white-space:nowrap}.hjob.idle{color:var(--mut)}
 /* taca */
 #tray{position:fixed;top:56px;right:0;bottom:0;width:340px;background:#fff;z-index:15;box-shadow:-4px 0 16px rgba(0,0,0,.3);transition:transform .25s;display:flex;flex-direction:column}#tray.collapsed{transform:translateX(105%)}
@@ -113,3 +113,15 @@ canvas#melt,canvas#spc,canvas#vk,canvas#lj{width:100%;border-radius:6px;border:1
 .ibox label{display:inline-flex;gap:8px;align-items:center}.ibox label input{width:200px}.disc{font-size:11.5px!important;color:var(--mut);margin-top:14px}
 @media(max-width:900px){.brand small,.prog,#btn-jobs{display:none}.brand{min-width:0}.brand b{font-size:13px}#hud{gap:6px;padding:0 6px}.speeds button{padding:4px 5px}#hud-clock{min-width:0;font-size:12px}#minimap{display:none}#hint{font-size:11px;bottom:96px}#tray{width:100%}}
 @media print{body *{visibility:hidden}#sub-body,#sub-body *{visibility:visible}#sub-body{position:absolute;left:0;top:0}}
+
+/* plan pracy */
+#missions{position:absolute;left:10px;top:10px;width:340px;max-height:calc(100% - 120px);overflow:auto;background:rgba(255,255,255,.97);border-radius:12px;padding:10px 12px;box-shadow:0 6px 20px rgba(0,0,0,.35);font-size:13px;z-index:5}
+#missions .mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}#missions .mh b{color:var(--blue2);font-size:15px}#missions .mh button{border:0;background:#eef2f6;border-radius:50%;width:26px;height:26px}
+.mtabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}.mtabs button{border:1px solid var(--line);background:#fff;border-radius:12px;padding:2px 9px;font-size:12px}.mtabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.mcase small{display:block;color:var(--mut)}.mgoal{background:#f2f7fc;border-radius:7px;padding:6px 8px;margin:6px 0;font-size:12.5px}
+.mprog{position:relative;height:16px;background:#e6edf3;border-radius:8px;overflow:hidden;margin:6px 0}.mprog i{position:absolute;inset:0 auto 0 0;background:#7ee0a1}.mprog span{position:relative;display:block;text-align:center;font-size:11px;font-weight:700;line-height:16px}
+.msteps{list-style:none;padding:0;margin:4px 0}.msteps li{display:flex;gap:6px;align-items:flex-start;padding:4px 4px;border-radius:6px}.msteps li em{font-style:normal;flex:1}.msteps li span{width:14px;flex:none;color:var(--mut)}
+.msteps li.ok{color:#8a96a3;text-decoration:line-through}.msteps li.ok span{color:var(--ok)}.msteps li.next{background:#fff4d6;font-weight:600}.msteps li.next span{color:#d9822b}
+.msteps li.mhd{font-weight:700;color:var(--blue2);margin-top:6px;padding-left:0}.msteps button{border:0;background:var(--blue);color:#fff;border-radius:6px;padding:1px 8px;flex:none}
+#btn-plan.has{background:#f5b400;color:#1e2a36;font-weight:700}
+@media(max-width:900px){#missions{width:calc(100% - 20px);max-height:45%}}
